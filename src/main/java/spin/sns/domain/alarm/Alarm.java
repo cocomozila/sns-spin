@@ -1,13 +1,15 @@
 package spin.sns.domain.alarm;
 
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import spin.sns.domain.user.Member;
+import spin.sns.domain.member.Member;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@Data
 public class Alarm {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
