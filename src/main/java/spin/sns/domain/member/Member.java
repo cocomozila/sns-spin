@@ -1,16 +1,14 @@
-package spin.sns.domain.user;
+package spin.sns.domain.member;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @NoArgsConstructor
@@ -31,8 +29,8 @@ public class Member {
     private String introduceContext;
 
     @Builder
-    public Member(String userId, String password, String email, String introduceContext) {
-        this.nickname = userId;
+    public Member(String nickname, String password, String email, String introduceContext) {
+        this.nickname = nickname;
         this.password = password;
         this.email = email;
         this.introduceContext = introduceContext;
