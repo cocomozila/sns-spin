@@ -29,4 +29,9 @@ public class MemberController {
         memberService.signup(memberSignup.createEntity());
         return new ResponseEntity(HttpStatus.CREATED);
     }
+
+    @PostMapping("/find-account")
+    public ResponseEntity<String> findAccount(@RequestBody EmailParam email) {
+        return new ResponseEntity<>(memberService.findAccount(email.getEmail()), HttpStatus.OK);
+    }
 }
