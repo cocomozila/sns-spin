@@ -37,4 +37,15 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .where(member.email.equalsIgnoreCase(email))
                 .fetchOne());
     }
+
+    @Override
+    public Optional<Member> findMemberByNickname(String nickname) {
+        QMember member = QMember.member;
+        return Optional.ofNullable(
+                query
+                .select(member)
+                .from(member)
+                .where(member.nickname.eq(nickname))
+                .fetchOne());
+    }
 }
