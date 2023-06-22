@@ -8,7 +8,9 @@ public interface MemberRepository {
 
     Member save(Member member);
 
-    Optional<Member> findAccount(String email);
+    void deleteMember(Member member);
 
-    Optional<Member> findMemberByNickname(String nickname);
+    Optional<Member> findByEmail(String email);
+
+    Optional<Member> findByNickname(String nickname);
 }
