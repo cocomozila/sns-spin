@@ -28,7 +28,12 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findAccount(String email) {
+    public void deleteMember(Member member) {
+        em.remove(member);
+    }
+
+    @Override
+    public Optional<Member> findByEmail(String email) {
         QMember member = QMember.member;
         return Optional.ofNullable(
                 query
@@ -39,7 +44,7 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
-    public Optional<Member> findMemberByNickname(String nickname) {
+    public Optional<Member> findByNickname(String nickname) {
         QMember member = QMember.member;
         return Optional.ofNullable(
                 query
