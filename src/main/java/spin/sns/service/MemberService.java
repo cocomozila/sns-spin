@@ -11,6 +11,7 @@ import spin.sns.error.exception.PasswordMismatchException;
 import spin.sns.repository.MemberRepository;
 import spin.sns.repository.SessionRepository;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Service
@@ -47,5 +48,9 @@ public class MemberService {
             return member;
         }
         throw new PasswordMismatchException("패스워드가 일치하지 않습니다.");
+    }
+
+    public void logout(HttpServletRequest request) {
+        sessionRepository.expire(request);
     }
 }

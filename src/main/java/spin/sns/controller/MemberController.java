@@ -14,6 +14,7 @@ import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.MemberSignup;
 import spin.sns.service.MemberService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -41,5 +42,10 @@ public class MemberController {
     public ResponseEntity<Void> login(@RequestBody LoginParam loginParam, HttpServletResponse response) {
         memberService.getLoginMember(loginParam, response);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request) {
+        memberService.logout(request);
     }
 }
