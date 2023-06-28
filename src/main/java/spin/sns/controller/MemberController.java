@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import spin.sns.annotation.CheckLogin;
 import spin.sns.domain.member.EmailParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.MemberSignup;
@@ -45,6 +46,7 @@ public class MemberController {
     }
 
     @PostMapping("/logout")
+    @CheckLogin
     public void logout(HttpServletRequest request) {
         memberService.logout(request);
     }
