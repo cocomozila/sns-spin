@@ -5,6 +5,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import spin.sns.domain.member.FindPasswordParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.Member;
 import spin.sns.error.exception.DuplicateEmailException;
@@ -179,5 +180,53 @@ public class MemberServiceTest {
         memberService.logout(request);
 
         verify(sessionRepository, times(1)).expire(request);
+    }
+
+    @Test
+    @DisplayName("유효한 아이디 이메일로 패스워드 찾기")
+    public void findPasswordTest() {
+        FindPasswordParam passwordParam = new FindPasswordParam("seyun","seyun94@naver.com");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("asdf")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(memberRepository.findByNickname(passwordParam.getNickname())).thenReturn(Optional.of(member));
+        String password = memberService.findPassword(passwordParam);
+        assertEquals("asdf", password);
+    }
+
+    @Test
+    @DisplayName("유효하지않는 아이디로 패스워드 찾기")
+    public void findPasswordWithNicknameDoesNotExistTest() {
+        FindPasswordParam passwordParam = new FindPasswordParam("wrong","seyun94@naver.com");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("asdf")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(memberRepository.findByNickname(passwordParam.getNickname())).thenReturn(Optional.empty());
+        MemberNotExistException exception = assertThrows(MemberNotExistException.class, () -> memberService.findPassword(passwordParam));
+        assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("유효하지않는 이메일로 패스워드 찾기")
+    public void findPasswordWithEmailDoesNotExistTest() {
+        FindPasswordParam passwordParam = new FindPasswordParam("seyun","wrong@naver.com");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("asdf")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(memberRepository.findByNickname(passwordParam.getNickname())).thenReturn(Optional.of(member));
+        MemberNotExistException exception = assertThrows(MemberNotExistException.class, () -> memberService.findPassword(passwordParam));
+        assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());
     }
 }
