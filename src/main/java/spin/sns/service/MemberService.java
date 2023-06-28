@@ -2,6 +2,7 @@ package spin.sns.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import spin.sns.domain.member.FindPasswordParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.Member;
 import spin.sns.error.exception.DuplicateEmailException;
@@ -53,4 +54,16 @@ public class MemberService {
     public void logout(HttpServletRequest request) {
         sessionRepository.expire(request);
     }
+
+    public String findPassword(FindPasswordParam findPasswordParam) {
+        Member findMember = memberRepository
+                .findByNickname(findPasswordParam.getNickname())
+                .orElseThrow(() -> new MemberNotExistException("사용자를 찾을 수 없습니다."));
+
+        if (findMember.getEmail().equalsIgnoreCase(findPasswordParam.getEmail())) {
+            return findMember.getPassword();
+        }
+        throw new MemberNotExistException("사용자를 찾을 수 없습니다.");
+    }
+
 }
