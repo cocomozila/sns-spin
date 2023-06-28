@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import spin.sns.annotation.CheckLogin;
 import spin.sns.domain.member.EmailParam;
+import spin.sns.domain.member.FindPasswordParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.MemberSignup;
 import spin.sns.service.MemberService;
@@ -49,5 +50,10 @@ public class MemberController {
     @CheckLogin
     public void logout(HttpServletRequest request) {
         memberService.logout(request);
+    }
+
+    @PostMapping("find-password")
+    public String findPassword(@RequestBody FindPasswordParam findPasswordParam) {
+        return memberService.findPassword(findPasswordParam);
     }
 }
