@@ -5,10 +5,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import spin.sns.error.exception.DuplicateEmailException;
-import spin.sns.error.exception.DuplicateNicknameException;
-import spin.sns.error.exception.MemberNotExistException;
-import spin.sns.error.exception.PasswordMismatchException;
+import spin.sns.error.exception.*;
 
 @RestControllerAdvice
 public class ExceptionController {
@@ -44,6 +41,12 @@ public class ExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(DuplicateEmailException.class)
     public ErrorResult handleDuplicateEmailException(DuplicateEmailException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PasswordConfirmationMismatchException.class)
+    public ErrorResult handlePasswordConfirmationMismatchException(PasswordConfirmationMismatchException e) {
         return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
     }
 }
