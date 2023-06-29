@@ -2,13 +2,11 @@ package spin.sns.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import spin.sns.domain.member.EditPasswordParam;
 import spin.sns.domain.member.FindPasswordParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.Member;
-import spin.sns.error.exception.DuplicateEmailException;
-import spin.sns.error.exception.DuplicateNicknameException;
-import spin.sns.error.exception.MemberNotExistException;
-import spin.sns.error.exception.PasswordMismatchException;
+import spin.sns.error.exception.*;
 import spin.sns.repository.MemberRepository;
 import spin.sns.repository.SessionRepository;
 
@@ -64,6 +62,19 @@ public class MemberService {
             return findMember.getPassword();
         }
         throw new MemberNotExistException("사용자를 찾을 수 없습니다.");
+    }
+
+    public void editPassword(EditPasswordParam editPasswordParam, HttpServletRequest request) {
+        Member member = (Member) sessionRepository.getSession(request);
+
+        if (member.getPassword().equals(editPasswordParam.getPassword())) {
+            if (editPasswordParam.getEditPassword().equals(editPasswordParam.getEditPasswordCheck())) {
+                memberRepository.editPassword(editPasswordParam, member.getNickname());
+                return;
+            }
+            throw new PasswordConfirmationMismatchException("변경할 비밀번호가 일치하지 않습니다.");
+        }
+        throw new PasswordMismatchException("패스워드가 일치하지 않습니다.");
     }
 
 }
