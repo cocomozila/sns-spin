@@ -5,13 +5,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import spin.sns.domain.member.EditPasswordParam;
 import spin.sns.domain.member.FindPasswordParam;
 import spin.sns.domain.member.LoginParam;
 import spin.sns.domain.member.Member;
-import spin.sns.error.exception.DuplicateEmailException;
-import spin.sns.error.exception.DuplicateNicknameException;
-import spin.sns.error.exception.MemberNotExistException;
-import spin.sns.error.exception.PasswordMismatchException;
+import spin.sns.error.exception.*;
 import spin.sns.repository.MemberRepository;
 import spin.sns.repository.SessionRepository;
 
@@ -228,5 +226,65 @@ public class MemberServiceTest {
         when(memberRepository.findByNickname(passwordParam.getNickname())).thenReturn(Optional.of(member));
         MemberNotExistException exception = assertThrows(MemberNotExistException.class, () -> memberService.findPassword(passwordParam));
         assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("정상 비밀번호 변경")
+    public void editPasswordTest() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        EditPasswordParam editPasswordParam = new EditPasswordParam("normal", "editpassword", "editpassword");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("normal")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(sessionRepository.getSession(request)).thenReturn(member);
+        doNothing().when(memberRepository).editPassword(editPasswordParam, member.getNickname());
+
+        memberService.editPassword(editPasswordParam, request);
+        verify(memberRepository, times(1)).editPassword(editPasswordParam, member.getNickname());
+    }
+
+    @Test
+    @DisplayName("비정상 비밀번호 변경_기존 비밀번호가 유효하지 않음")
+    public void editPasswordTest_InvalidOldPassword() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        EditPasswordParam editPasswordParam = new EditPasswordParam("error_normal", "editpassword", "editpassword");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("normal")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(sessionRepository.getSession(request)).thenReturn(member);
+
+        PasswordMismatchException exception = assertThrows(PasswordMismatchException.class,
+                () -> memberService.editPassword(editPasswordParam, request));
+        assertEquals("패스워드가 일치하지 않습니다.", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("비정상 비밀번호 변경_변경할 비밀번호가 유효하지 않음")
+    public void editPasswordTest_InvalidNewPassword() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+
+        EditPasswordParam editPasswordParam = new EditPasswordParam("normal", "editpassword", "error_editpassword");
+        Member member = Member.builder()
+                .nickname("seyun")
+                .password("normal")
+                .email("seyun94@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(sessionRepository.getSession(request)).thenReturn(member);
+
+        PasswordConfirmationMismatchException exception = assertThrows(PasswordConfirmationMismatchException.class,
+                () -> memberService.editPassword(editPasswordParam, request));
+        assertEquals("변경할 비밀번호가 일치하지 않습니다.", exception.getMessage());
     }
 }
