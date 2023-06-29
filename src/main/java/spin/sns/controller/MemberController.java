@@ -5,15 +5,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import spin.sns.annotation.CheckLogin;
-import spin.sns.domain.member.EmailParam;
-import spin.sns.domain.member.FindPasswordParam;
-import spin.sns.domain.member.LoginParam;
-import spin.sns.domain.member.MemberSignup;
+import spin.sns.domain.member.*;
 import spin.sns.service.MemberService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -55,5 +49,12 @@ public class MemberController {
     @PostMapping("find-password")
     public String findPassword(@RequestBody FindPasswordParam findPasswordParam) {
         return memberService.findPassword(findPasswordParam);
+    }
+
+    @PostMapping("/edit-password")
+    @CheckLogin
+    public ResponseEntity<Void> editPassword(@RequestBody EditPasswordParam editPasswordParam, HttpServletRequest request) {
+        memberService.editPassword(editPasswordParam, request);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
