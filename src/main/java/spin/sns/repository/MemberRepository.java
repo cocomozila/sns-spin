@@ -1,5 +1,6 @@
 package spin.sns.repository;
 
+import spin.sns.domain.member.EditPasswordParam;
 import spin.sns.domain.member.Member;
 
 import java.util.Optional;
@@ -13,4 +14,6 @@ public interface MemberRepository {
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findByNickname(String nickname);
+
+    void editPassword(EditPasswordParam editPasswordParam, String nickname);
 }

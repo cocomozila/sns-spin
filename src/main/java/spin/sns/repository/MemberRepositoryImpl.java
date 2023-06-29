@@ -3,6 +3,7 @@ package spin.sns.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
+import spin.sns.domain.member.EditPasswordParam;
 import spin.sns.domain.member.Member;
 import spin.sns.domain.member.QMember;
 
@@ -52,5 +53,16 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .from(member)
                 .where(member.nickname.eq(nickname))
                 .fetchOne());
+    }
+
+    @Override
+    public void editPassword(EditPasswordParam editPasswordParam, String nickname) {
+        QMember member = QMember.member;
+
+        query
+            .update(member)
+            .set(member.password, editPasswordParam.getEditPassword())
+            .where(member.nickname.eq(nickname))
+            .execute();
     }
 }
