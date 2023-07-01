@@ -1,6 +1,7 @@
 package spin.sns.domain.post;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spin.sns.domain.member.Member;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
 public class Post {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +22,11 @@ public class Post {
     private LocalDateTime createTime;
     private String content;
     private int likeCount;
+
+    @Builder
+    public Post(Member member, LocalDateTime createTime, String content) {
+        this.member = member;
+        this.createTime = LocalDateTime.now();
+        this.content = content;
+    }
 }
