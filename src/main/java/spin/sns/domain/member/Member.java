@@ -26,7 +26,11 @@ public class Member {
 
     @NotBlank
     private String email;
+
     private String introduceContext;
+
+    private int followers;
+    private int following;
 
     @Builder
     public Member(String nickname, String password, String email, String introduceContext) {
