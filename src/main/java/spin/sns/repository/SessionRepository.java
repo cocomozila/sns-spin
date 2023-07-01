@@ -26,6 +26,7 @@ public class SessionRepository {
 
         //쿠키 생성
         Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
+        cookie.setPath("/api");
         response.addCookie(cookie);
     }
 
