@@ -1,10 +1,10 @@
 package spin.sns.domain.image;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import spin.sns.domain.post.Post;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 
 @Entity
 @NoArgsConstructor
@@ -17,7 +17,13 @@ public class Image {
     @JoinColumn(name = "POST_ID")
     private Post post;
 
-    @NotBlank
-    private String imagePath;
-    private int sequence;
+    private String serverFilename;
+    private String originalFilename;
+
+    @Builder
+    public Image(Post post, String serverFilename, String originalFilename) {
+        this.post = post;
+        this.serverFilename = serverFilename;
+        this.originalFilename = originalFilename;
+    }
 }
