@@ -39,4 +39,8 @@ public class Member {
         this.email = email;
         this.introduceContext = introduceContext;
     }
+
+    public boolean isValidatedEditPassword(String editPassword) {
+        return this.getPassword().equals(editPassword);
+    }
 }
