@@ -22,10 +22,10 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Autowired
-    private final MemberRepository memberRepository;
+    private final ImageService imageService;
 
     @Autowired
-    private final ImageService imageService;
+    private final MemberRepository memberRepository;
 
     @Autowired
     private final SessionRepository sessionRepository;
@@ -33,9 +33,12 @@ public class PostService {
     @Transactional
     public void uploadPost(List<MultipartFile> files, String content,
                            HttpServletRequest request) {
+        Member member = (Member) sessionRepository.getSession(request);
+        Member findMember = memberRepository.findById(member.getMemberId())
+                .orElseThrow();
 
         Post post = postRepository.save(Post.builder()
-                    .member((Member) sessionRepository.getSession(request))
+                    .member(findMember)
                     .content(content)
                     .build());
 
