@@ -57,4 +57,11 @@ public class MemberController {
         memberService.editPassword(editPasswordParam, request);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @DeleteMapping("/delete-account")
+    @CheckLogin
+    public ResponseEntity<Void> deleteAccount(HttpServletRequest request) {
+        memberService.deleteAccount(request);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
