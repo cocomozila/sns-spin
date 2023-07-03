@@ -77,4 +77,10 @@ public class MemberService {
         throw new PasswordMismatchException("패스워드가 일치하지 않습니다.");
     }
 
+    public void deleteAccount(HttpServletRequest request) {
+        Member member = (Member) sessionRepository.getSession(request);
+        Member findMember = memberRepository.findById(member.getMemberId())
+                .orElseThrow();
+        memberRepository.delete(findMember);
+    }
 }
