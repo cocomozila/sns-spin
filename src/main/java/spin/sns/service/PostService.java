@@ -34,7 +34,7 @@ public class PostService {
     public void uploadPost(List<MultipartFile> files, String content,
                            HttpServletRequest request) {
 
-        Post post = postRepository.uploadPost(Post.builder()
+        Post post = postRepository.save(Post.builder()
                     .member((Member) sessionRepository.getSession(request))
                     .content(content)
                     .build());
