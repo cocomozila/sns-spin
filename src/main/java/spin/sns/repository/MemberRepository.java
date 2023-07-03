@@ -1,19 +1,13 @@
 package spin.sns.repository;
 
-import spin.sns.domain.member.EditPasswordParam;
+import org.springframework.data.jpa.repository.JpaRepository;
 import spin.sns.domain.member.Member;
 
 import java.util.Optional;
 
-public interface MemberRepository {
-
-    Member save(Member member);
-
-    void deleteMember(Member member);
+public interface MemberRepository extends JpaRepository<Member, Long>, MemberCustomRepository {
 
     Optional<Member> findByEmail(String email);
 
     Optional<Member> findByNickname(String nickname);
-
-    void editPassword(EditPasswordParam editPasswordParam, String nickname);
 }
