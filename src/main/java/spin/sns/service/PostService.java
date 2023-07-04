@@ -33,7 +33,7 @@ public class PostService {
     @Transactional
     public void uploadPost(List<MultipartFile> files, String content,
                            HttpServletRequest request) {
-        Member member = (Member) sessionRepository.getSession(request);
+        Member member = sessionRepository.getSession(request);
         Member findMember = memberRepository.findById(member.getMemberId())
                 .orElseThrow();
 

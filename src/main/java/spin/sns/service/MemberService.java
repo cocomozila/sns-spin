@@ -65,7 +65,7 @@ public class MemberService {
     }
 
     public void editPassword(EditPasswordParam editPasswordParam, HttpServletRequest request) {
-        Member member = (Member) sessionRepository.getSession(request);
+        Member member = sessionRepository.getSession(request);
 
         if (member.isValidatedEditPassword(editPasswordParam.getPassword())) {
             if (editPasswordParam.getEditPassword().equals(editPasswordParam.getEditPasswordCheck())) {
