@@ -1,5 +1,6 @@
 package spin.sns.domain.follow;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import spin.sns.domain.member.Member;
 
@@ -13,11 +14,16 @@ public class Follow {
     private Long followId;
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "MEMBER_ID", insertable = false, updatable = false)
+    @JoinColumn(name = "FOLLOW_MEMBER_ID")
     private Member followMember;
 
+    @Builder
+    public Follow(Member member, Member followMember) {
+        this.member = member;
+        this.followMember = followMember;
+    }
 }
