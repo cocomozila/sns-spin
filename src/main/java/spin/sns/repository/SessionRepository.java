@@ -1,6 +1,7 @@
 package spin.sns.repository;
 
 import org.springframework.stereotype.Repository;
+import spin.sns.domain.member.Member;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -14,15 +15,15 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionRepository {
 
     public static final String SESSION_COOKIE_NAME = "mySessionId";
-    private final Map<String, Object> sessionStore = new ConcurrentHashMap<>();
+    private final Map<String, Member> sessionStore = new ConcurrentHashMap<>();
 
     /**
      * 세션 생성
      */
-    public void createSession(Object value, HttpServletResponse response) {
+    public void createSession(Member member, HttpServletResponse response) {
 
         String sessionId = UUID.randomUUID().toString();
-        sessionStore.put(sessionId, value);
+        sessionStore.put(sessionId, member);
 
         //쿠키 생성
         Cookie cookie = new Cookie(SESSION_COOKIE_NAME, sessionId);
@@ -33,7 +34,7 @@ public class SessionRepository {
     /**
      * 세션 조회
      */
-    public Object getSession(HttpServletRequest request) {
+    public Member getSession(HttpServletRequest request) {
         Cookie sessionCookie = findCookie(request, SESSION_COOKIE_NAME);
         if (sessionCookie == null) {
             return null;
