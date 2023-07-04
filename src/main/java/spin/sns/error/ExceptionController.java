@@ -49,4 +49,16 @@ public class ExceptionController {
     public ErrorResult handlePasswordConfirmationMismatchException(PasswordConfirmationMismatchException e) {
         return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicateFollowException.class)
+    public ErrorResult handleDuplicateFollowException(DuplicateFollowException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(NotLoginException.class)
+    public ErrorResult handleNotLoginException(NotLoginException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
 }
