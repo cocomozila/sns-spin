@@ -13,11 +13,15 @@ import spin.sns.repository.MemberRepository;
 import spin.sns.repository.SessionRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
 public class FollowService {
+
+    private final int FOLLOWER = 0;
+    private final int FOLLOWING = 1;
 
     @Autowired
     private final SessionRepository sessionRepository;
@@ -30,6 +34,33 @@ public class FollowService {
 
     @Transactional
     public void following(String userNickname, HttpServletRequest request) {
+        List<Member> followParam = getFollowerAndFollowing(userNickname, request);
+        Optional<Follow> findFollow = followRepository
+                .findByMemberEqualsAndFollowMemberEquals(
+                        followParam.get(FOLLOWER), followParam.get(FOLLOWING));
+
+        Follow follow = Follow.builder()
+                        .member(followParam.get(FOLLOWER))
+                        .followMember(followParam.get(FOLLOWING))
+                        .build();
+
+        if (findFollow.isPresent()) {
+            throw new DuplicateFollowException("이미 팔로우 했습니다.");
+        }
+        followRepository.save(follow);
+    }
+
+    @Transactional
+    public void cancelFollowing(String userNickname, HttpServletRequest request) {
+        List<Member> followParam = getFollowerAndFollowing(userNickname, request);
+        Optional<Follow> findFollow = followRepository
+                .findByMemberEqualsAndFollowMemberEquals(
+                        followParam.get(FOLLOWER), followParam.get(FOLLOWING));
+
+        findFollow.ifPresent(followRepository::delete);
+    }
+
+    private List<Member> getFollowerAndFollowing(String userNickname, HttpServletRequest request) {
         Member loginMember = sessionRepository.getSession(request);
         Member findMember = memberRepository.findById(loginMember.getMemberId())
                 .orElseThrow();
@@ -37,17 +68,6 @@ public class FollowService {
         Member followMember = memberRepository.findByNickname(userNickname)
                 .orElseThrow(()-> new MemberNotExistException("사용자를 찾을 수 없습니다."));
 
-        Follow follow = Follow.builder()
-                        .member(findMember)
-                        .followMember(followMember)
-                        .build();
-
-        Optional<Follow> findFollow = followRepository
-                .findByMemberEqualsAndFollowMemberEquals(findMember, followMember);
-
-        if (findFollow.isPresent()) {
-            throw new DuplicateFollowException("이미 팔로우 했습니다.");
-        }
-        followRepository.save(follow);
+        return List.of(findMember, followMember);
     }
 }
