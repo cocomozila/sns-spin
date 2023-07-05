@@ -130,7 +130,7 @@ public class MemberServiceTest {
         when(memberRepository.findByNickname(loginParam.getNickname())).thenReturn(Optional.of(member));
         doNothing().when(sessionRepository).createSession(member, response);
 
-        Member result = memberService.getLoginMember(loginParam, response);
+        Member result = memberService.login(loginParam, response);
         assertEquals(member, result);
 
         verify(sessionRepository, times(1)).createSession(member, response);
@@ -150,7 +150,7 @@ public class MemberServiceTest {
 
         when(memberRepository.findByNickname(loginParam.getNickname())).thenReturn(Optional.of(member));
 
-        PasswordMismatchException exception = assertThrows(PasswordMismatchException.class, () -> memberService.getLoginMember(loginParam, response));
+        PasswordMismatchException exception = assertThrows(PasswordMismatchException.class, () -> memberService.login(loginParam, response));
         assertEquals("패스워드가 일치하지 않습니다.", exception.getMessage());
 
         verify(sessionRepository, never()).createSession(any(), any());
@@ -164,7 +164,7 @@ public class MemberServiceTest {
 
         when(memberRepository.findByNickname(loginParam.getNickname())).thenReturn(Optional.empty());
 
-        MemberNotExistException exception = assertThrows(MemberNotExistException.class, () -> memberService.getLoginMember(loginParam, response));
+        MemberNotExistException exception = assertThrows(MemberNotExistException.class, () -> memberService.login(loginParam, response));
         assertEquals("사용자를 찾을 수 없습니다.", exception.getMessage());
 
         verify(sessionRepository, never()).createSession(any(), any());
