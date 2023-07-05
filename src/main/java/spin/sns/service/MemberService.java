@@ -37,7 +37,7 @@ public class MemberService {
                 .getNickname();
     }
 
-    public Member getLoginMember(LoginParam loginParam, HttpServletResponse response) {
+    public Member login(LoginParam loginParam, HttpServletResponse response) {
         Member member = memberRepository
                 .findByNickname(loginParam.getNickname())
                 .orElseThrow(() -> new MemberNotExistException("사용자를 찾을 수 없습니다."));

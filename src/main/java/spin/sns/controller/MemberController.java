@@ -36,7 +36,7 @@ public class MemberController {
 
     @PostMapping("/login")
     public ResponseEntity<Void> login(@RequestBody LoginParam loginParam, HttpServletResponse response) {
-        memberService.getLoginMember(loginParam, response);
+        memberService.login(loginParam, response);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
