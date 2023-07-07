@@ -102,6 +102,29 @@ class FollowServiceTest {
     @Test
     @DisplayName("정상적인 팔로우 취소 테스트")
     public void normalFollowCancelTest() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
 
+        Member member1 = Member.builder()
+                .nickname("aa")
+                .password("1234")
+                .email("aa@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        Member member2 = Member.builder()
+                .nickname("bb")
+                .password("1234")
+                .email("bb@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        when(sessionRepository.getSession(request)).thenReturn(member1);
+        when(memberRepository.findById(member1.getMemberId())).thenReturn(Optional.of(member1));
+        when(memberRepository.findByNickname(member2.getNickname())).thenReturn(Optional.of(member2));
+        when(followRepository.findByMemberEqualsAndFollowMemberEquals(member1, member2)).thenReturn(Optional.of(new Follow()));
+
+        followService.cancelFollowing(member2.getNickname(), request);
+
+        verify(followRepository, times(1)).delete(any(Follow.class));
     }
 }
