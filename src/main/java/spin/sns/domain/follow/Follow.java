@@ -1,6 +1,7 @@
 package spin.sns.domain.follow;
 
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spin.sns.domain.member.Member;
 
@@ -8,6 +9,7 @@ import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
+@Getter
 public class Follow {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
