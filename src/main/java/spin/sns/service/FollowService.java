@@ -1,10 +1,12 @@
 package spin.sns.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import spin.sns.domain.follow.Follow;
+import spin.sns.domain.follow.Followers;
 import spin.sns.domain.member.Member;
 import spin.sns.error.exception.DuplicateFollowException;
 import spin.sns.error.exception.MemberNotExistException;
@@ -15,9 +17,11 @@ import spin.sns.repository.SessionRepository;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
+@Slf4j
 public class FollowService {
 
     private final int FOLLOWER = 0;
@@ -58,6 +62,20 @@ public class FollowService {
                         followParam.get(FOLLOWER), followParam.get(FOLLOWING));
 
         findFollow.ifPresent(followRepository::delete);
+    }
+
+    public Followers getFollowers(String userNickname) {
+        Member findMember = memberRepository.findByNickname(userNickname)
+                .orElseThrow();
+
+        List<String> nicknames = followRepository.findAllByFollowMember(findMember)
+                .stream()
+                .map(value -> value.getMember().getNickname())
+                .collect(Collectors.toList());
+
+        log.info("size={}",nicknames.size());
+        log.info("nicknameList={}",nicknames.get(0));
+        return new Followers(nicknames.size(), nicknames);
     }
 
     private List<Member> getFollowerAndFollowing(String userNickname, HttpServletRequest request) {
