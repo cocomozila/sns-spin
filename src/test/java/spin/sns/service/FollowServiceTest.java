@@ -8,6 +8,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import spin.sns.domain.follow.Follow;
+import spin.sns.domain.follow.Followers;
 import spin.sns.domain.member.Member;
 import spin.sns.error.exception.DuplicateFollowException;
 import spin.sns.repository.FollowRepository;
@@ -15,6 +16,7 @@ import spin.sns.repository.MemberRepository;
 import spin.sns.repository.SessionRepository;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Optional;
 
 import static org.mockito.Mockito.*;
@@ -126,5 +128,34 @@ class FollowServiceTest {
         followService.cancelFollowing(member2.getNickname(), request);
 
         verify(followRepository, times(1)).delete(any(Follow.class));
+    }
+
+    @Test
+    @DisplayName("팔로워 조회 테스트")
+    public void lookupFollowersTest() {
+        Member member1 = Member.builder()
+                .nickname("aa")
+                .password("1234")
+                .email("aa@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        Member member2 = Member.builder()
+                .nickname("bb")
+                .password("1234")
+                .email("bb@naver.com")
+                .introduceContext("hi everyone")
+                .build();
+
+        List<String> followers = List.of("follower1", "follower2");
+
+        when(memberRepository.findByNickname(anyString())).thenReturn(Optional.of(member2));
+        when(followRepository.findAllByFollowMember(any(Member.class))).thenReturn(anyList());
+
+        Followers followers1 = followService.getFollowers("test");
+        verify(memberRepository, times(1)).findByNickname(anyString());
+        verify(followRepository, times(1)).findAllByFollowMember(any(Member.class));
+        org.assertj.core.api.Assertions.assertThat(followers1).isNotNull();
+
     }
 }
