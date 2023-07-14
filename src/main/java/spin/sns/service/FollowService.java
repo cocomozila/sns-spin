@@ -64,6 +64,7 @@ public class FollowService {
         findFollow.ifPresent(followRepository::delete);
     }
 
+    @Transactional
     public Followers getFollowers(String userNickname) {
         Member findMember = memberRepository.findByNickname(userNickname)
                 .orElseThrow();
@@ -73,8 +74,6 @@ public class FollowService {
                 .map(value -> value.getMember().getNickname())
                 .collect(Collectors.toList());
 
-        log.info("size={}",nicknames.size());
-        log.info("nicknameList={}",nicknames.get(0));
         return new Followers(nicknames.size(), nicknames);
     }
 

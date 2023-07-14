@@ -44,4 +44,9 @@ public class PostService {
 
         imageService.saveImage(files, post);
     }
+
+    @Transactional
+    public void deletePost(Long postId) {
+        postRepository.deleteById(postId);
+    }
 }
