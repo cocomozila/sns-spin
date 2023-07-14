@@ -1,6 +1,7 @@
 package spin.sns.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -42,6 +43,7 @@ class PostServiceTest {
     }
 
     @Test
+    @DisplayName("게시물 업로드 테스트")
     public void uploadPostTest() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         Member member = Member.builder()
@@ -56,6 +58,13 @@ class PostServiceTest {
         postService.uploadPost(null, "새글 작성입니다!", request);
 
         verify(postRepository, times(1)).save(any(Post.class));
+    }
+
+    @Test
+    @DisplayName("게시물 삭제 테스트")
+    public void deletePostTest() {
+        postService.deletePost(anyLong());
+        verify(postRepository, times(1)).deleteById(anyLong());
     }
 
 }
