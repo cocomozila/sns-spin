@@ -38,4 +38,14 @@ public class PostController {
     public void deletePost(@PathVariable Long postId) {
         postService.deletePost(postId);
     }
+
+    @PutMapping("{postId}")
+    @CheckLogin
+    @ResponseStatus(HttpStatus.OK)
+    public void updatePost(@PathVariable Long postId,
+                           @RequestParam String content,
+                           HttpServletRequest request) {
+
+        postService.updatePost(postId, content, request);
+    }
 }
