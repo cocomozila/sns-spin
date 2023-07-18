@@ -61,4 +61,10 @@ public class ExceptionController {
     public ErrorResult handleNotLoginException(NotLoginException e) {
         return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PostPermissionDeniedException.class)
+    public ErrorResult handlePostPermissionDeniedException(PostPermissionDeniedException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
 }
