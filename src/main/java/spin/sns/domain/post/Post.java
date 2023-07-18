@@ -35,4 +35,12 @@ public class Post {
         this.createTime = LocalDateTime.now();
         this.content = content;
     }
+
+    public boolean isSameAuthors(Member member) {
+        return this.member.getMemberId() == member.getMemberId();
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
