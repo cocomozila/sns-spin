@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import spin.sns.domain.member.Member;
 import spin.sns.domain.post.Post;
+import spin.sns.error.exception.PostPermissionDeniedException;
 import spin.sns.repository.MemberRepository;
 import spin.sns.repository.PostRepository;
 import spin.sns.repository.SessionRepository;
@@ -48,5 +49,16 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId) {
         postRepository.deleteById(postId);
+    }
+
+    @Transactional
+    public void updatePost(Long postId, String content, HttpServletRequest request) {
+        Post findPost = postRepository.findById(postId).orElseThrow();
+        Member loginMember = sessionRepository.getSession(request);
+        if (findPost.isSameAuthors(loginMember)) {
+            findPost.updateContent(content);
+            return;
+        }
+        throw new PostPermissionDeniedException("Post 수정 권한이 없습니다.");
     }
 }
