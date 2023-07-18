@@ -1,7 +1,7 @@
 package spin.sns.domain.member;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import spin.sns.domain.post.Post;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
 public class Member {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
