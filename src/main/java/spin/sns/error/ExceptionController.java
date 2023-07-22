@@ -67,4 +67,16 @@ public class ExceptionController {
     public ErrorResult handlePostPermissionDeniedException(PostPermissionDeniedException e) {
         return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PostNotFoundException.class)
+    public ErrorResult handlePostNotFoundException(PostNotFoundException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(DuplicatePostLikeException.class)
+    public ErrorResult handleDuplicatePostLikeException(DuplicatePostLikeException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
 }
