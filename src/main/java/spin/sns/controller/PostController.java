@@ -39,7 +39,7 @@ public class PostController {
         postService.deletePost(postId);
     }
 
-    @PutMapping("{postId}")
+    @PutMapping("/{postId}")
     @CheckLogin
     @ResponseStatus(HttpStatus.OK)
     public void updatePost(@PathVariable Long postId,
@@ -47,5 +47,12 @@ public class PostController {
                            HttpServletRequest request) {
 
         postService.updatePost(postId, content, request);
+    }
+
+    @PostMapping("/{postId}/like")
+    @CheckLogin
+    @ResponseStatus(HttpStatus.OK)
+    public void addPostLike(@PathVariable Long postId, HttpServletRequest request) {
+        postService.addPostLike(postId, request);
     }
 }
