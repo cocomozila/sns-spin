@@ -43,4 +43,8 @@ public class Post {
     public void updateContent(String content) {
         this.content = content;
     }
+
+    public void addLike() {
+        this.likeCount += 1;
+    }
 }
