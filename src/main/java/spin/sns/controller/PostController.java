@@ -55,4 +55,11 @@ public class PostController {
     public void addPostLike(@PathVariable Long postId, HttpServletRequest request) {
         postService.addPostLike(postId, request);
     }
+
+    @DeleteMapping("/{postId}/like")
+    @CheckLogin
+    @ResponseStatus(HttpStatus.OK)
+    public void deletePostLike(@PathVariable Long postId, HttpServletRequest request) {
+        postService.deletePostLike(postId, request);
+    }
 }
