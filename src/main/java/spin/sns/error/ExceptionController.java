@@ -79,4 +79,10 @@ public class ExceptionController {
     public ErrorResult handleDuplicatePostLikeException(DuplicatePostLikeException e) {
         return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(PostLikeNotFoundException.class)
+    public ErrorResult handlePostLikeNotFoundException(PostLikeNotFoundException e) {
+        return new ErrorResult(e.getLocalizedMessage(), getSimpleName(e));
+    }
 }
