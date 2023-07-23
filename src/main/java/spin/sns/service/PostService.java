@@ -8,10 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 import spin.sns.domain.member.Member;
 import spin.sns.domain.post.Post;
 import spin.sns.domain.postlike.PostLike;
-import spin.sns.error.exception.DuplicatePostLikeException;
-import spin.sns.error.exception.MemberNotExistException;
-import spin.sns.error.exception.PostNotFoundException;
-import spin.sns.error.exception.PostPermissionDeniedException;
+import spin.sns.error.exception.*;
 import spin.sns.repository.MemberRepository;
 import spin.sns.repository.PostLikeRepository;
 import spin.sns.repository.PostRepository;
@@ -19,6 +16,7 @@ import spin.sns.repository.SessionRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,5 +81,22 @@ public class PostService {
         }
         postLikeRepository.save(new PostLike(findPost, findMember));
         findPost.addLike();
+    }
+
+    @Transactional
+    public void deletePostLike(Long postId, HttpServletRequest request) {
+        Member loginMember = sessionRepository.getSession(request);
+        Member findMember = memberRepository.findById(loginMember.getMemberId())
+                .orElseThrow(()-> new MemberNotExistException("사용자를 찾을 수 없습니다."));
+
+        Post findPost = postRepository.findById(postId)
+                .orElseThrow(()-> new PostNotFoundException("게시글을 찾을 수 없습니다."));
+
+        Optional<PostLike> findPostLIke = postLikeRepository.findByMemberAndPost(findMember, findPost);
+        if (findPostLIke.isPresent()) {
+            postLikeRepository.delete(findPostLIke.get());
+            return;
+        }
+        throw new PostLikeNotFoundException("좋아요가 존재하지 않습니다.");
     }
 }
