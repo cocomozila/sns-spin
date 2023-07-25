@@ -95,6 +95,7 @@ public class PostService {
         Optional<PostLike> findPostLIke = postLikeRepository.findByMemberAndPost(findMember, findPost);
         if (findPostLIke.isPresent()) {
             postLikeRepository.delete(findPostLIke.get());
+            findPost.deleteLike();
             return;
         }
         throw new PostLikeNotFoundException("좋아요가 존재하지 않습니다.");
