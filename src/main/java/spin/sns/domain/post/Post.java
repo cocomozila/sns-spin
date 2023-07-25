@@ -47,4 +47,8 @@ public class Post {
     public void addLike() {
         this.likeCount += 1;
     }
+
+    public void deleteLike() {
+        this.likeCount -= 1;
+    }
 }
